@@ -23,11 +23,12 @@ app.get('/issues/:id', async (req, res) => {
 });
 
 app.post('/issues', async (req, res) => {
-  const { title } = req.body;
+  const { title, status } = req.body;
 
   const result = await prisma.issue.create({
     data: {
       title,
+      status,
     },
   });
 
