@@ -13,12 +13,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String
+  issues   Issue[]
+}
+
 model Issue {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   title     String
   status    Status   @default(LOW)
   isDone    Boolean  @default(false)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 }
 
 enum Status {
