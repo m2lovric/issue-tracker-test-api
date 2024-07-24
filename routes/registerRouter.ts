@@ -2,11 +2,11 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 
-const authRouter = express.Router();
+const registerRouter = express.Router();
 
 const prisma = new PrismaClient();
 
-authRouter.route('/').post(async (req, res) => {
+registerRouter.route('/').post(async (req, res) => {
   const { email, password } = req.body;
 
   const emailExist = await prisma.user.findUnique({ where: { email: email } });
@@ -31,4 +31,4 @@ authRouter.route('/').post(async (req, res) => {
   }
 });
 
-export { authRouter };
+export { registerRouter };
