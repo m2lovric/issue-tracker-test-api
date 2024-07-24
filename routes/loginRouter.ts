@@ -1,5 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 
 const loginRouter = express.Router();
@@ -16,6 +17,7 @@ loginRouter.route('/').post(async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
 
   if (match) {
+    const token = jwt.sign();
     return res.status(200).json({ status: 'User logged in' });
   } else {
     return res.status(401).json({ error: 'Unauthorized' });
