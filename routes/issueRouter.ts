@@ -1,15 +1,20 @@
-import express from 'express';
+import express, { Request } from 'express';
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 const issueRouter = express.Router();
 
 const prisma = new PrismaClient();
 
+interface ReqWithUser extends Request {
+  user?: string | jwt.JwtPayload;
+}
+
 issueRouter
   .route('/')
-  .get(async (req, res) => {
+  .get(async (req: ReqWithUser, res) => {
     const issues = await prisma.issue.findMany();
-    return res.json(issues);
+    return res.json({ data: issues, user: req.user });
   })
   .post(async (req, res) => {
     const { title, status, userId } = req.body;
