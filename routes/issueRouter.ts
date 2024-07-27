@@ -12,9 +12,17 @@ export interface ReqWithUser extends Request {
 
 issueRouter
   .route('/')
-  .get(async (req: ReqWithUser, res) => {
-    const issues = await prisma.issue.findMany();
-    return res.json(issues);
+  .get(async (req, res) => {
+    const id = req.headers['userid'] as string;
+    if (id === undefined) return res.status(500);
+    try {
+      const issues = await prisma.issue.findMany({
+        where: {
+          userId: id,
+        },
+      });
+      return res.json(issues);
+    } catch (err) {}
   })
   .post(async (req, res) => {
     const { title, status, userId } = req.body;
@@ -23,7 +31,9 @@ issueRouter
       data: {
         title,
         status,
-        userId,
+        user: {
+          connect: { id: userId },
+        },
       },
     });
 
