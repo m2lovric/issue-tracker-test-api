@@ -1,7 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { registerRouter, issueRouter, loginRouter } from './routes';
+import {
+  registerRouter,
+  issueRouter,
+  loginRouter,
+  signoutRouter,
+} from './routes';
 import { checkJwtAuth } from './middlewares/checkJwtAuth';
 
 const app = express();
@@ -18,6 +23,7 @@ app.use(cors(corsOptions));
 app.use('/issues', checkJwtAuth, issueRouter);
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
+app.use('/signout', signoutRouter);
 
 const PORT = 4001;
 app.listen(PORT, () => {
