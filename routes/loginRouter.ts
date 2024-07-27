@@ -22,8 +22,12 @@ loginRouter.route('/').post(async (req, res) => {
       process.env.JWT_SECRET as string,
       { expiresIn: '1h' }
     );
-    res.cookie('token', token, { httpOnly: true });
-    return res.status(200).json({ status: 'User logged in' });
+
+    res.cookie('token', token, { httpOnly: true, sameSite: 'lax' });
+    return res.status(200).json({
+      status: 'User logged in',
+      user: { id: user.id, email: user.email },
+    });
   } else {
     return res.status(401).json({ error: 'Unauthorized' });
   }

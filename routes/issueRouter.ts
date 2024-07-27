@@ -6,7 +6,7 @@ const issueRouter = express.Router();
 
 const prisma = new PrismaClient();
 
-interface ReqWithUser extends Request {
+export interface ReqWithUser extends Request {
   user?: string | jwt.JwtPayload;
 }
 
@@ -14,7 +14,7 @@ issueRouter
   .route('/')
   .get(async (req: ReqWithUser, res) => {
     const issues = await prisma.issue.findMany();
-    return res.json({ data: issues, user: req.user });
+    return res.json(issues);
   })
   .post(async (req, res) => {
     const { title, status, userId } = req.body;
