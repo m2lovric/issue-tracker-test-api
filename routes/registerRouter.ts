@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 const registerRouter = express.Router();
 
@@ -25,7 +26,17 @@ registerRouter.route('/').post(async (req, res) => {
       },
     });
 
-    res.json(result);
+    const token = jwt.sign(
+      { id: result.id, email: result.email },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, { httpOnly: true, sameSite: 'lax' });
+    return res.status(200).json({
+      status: 'User registered successfully',
+      user: { id: result.id, email: result.email },
+    });
   } catch (err) {
     res.status(500).json({ error: err });
   }
